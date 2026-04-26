@@ -1,0 +1,25 @@
+# Vivado
+*.jou
+*.log
+*.str
+/.Xil
+/vivado_project/*.runs
+/vivado_project/*.cache
+/vivado_project/*.hw
+/vivado_project/*.ip_user_files
+/vivado_project/*.sim
+/vivado_project/*.gen
+
+# Vitis
+/vitis/.metadata
+/vitis/*/Debug
+/vitis/*/.settings
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# hls4ml output
+/hls4ml/my_project/
