@@ -24,14 +24,15 @@ print("ONNX model is valid")
 # configure hls4ml
 hls_config = hls4ml.utils.config_from_keras_model(model, granularity='model')
 hls_config['Model']['Precision'] = 'ap_fixed<16,6>'
-hls_config['Model']['ReuseFactor'] = 1
+hls_config['Model']['ReuseFactor'] = 64
 
 # convert to HLS project
 hls_model = hls4ml.converters.convert_from_keras_model(
     model,
     hls_config=hls_config,
     output_dir='../hls4ml/lenet5_project',
-    part='xc7z010clg400-1'
+    part='xc7z010clg400-1',
+    backend='Vitis'
 )
 
 # plot model architecture
