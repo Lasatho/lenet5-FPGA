@@ -23,3 +23,6 @@ __pycache__/
 
 # hls4ml output
 /hls4ml/my_project/
+
+# Claude session notes (local only)
+CLAUDE.local.md

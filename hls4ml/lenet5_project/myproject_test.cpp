@@ -11,6 +11,9 @@
 #include "firmware/nnet_utils/nnet_helpers.h"
 
 // hls-fpga-machine-learning insert bram
+#include "firmware/weights/w5.h"
+#include "firmware/weights/w9.h"
+#include "firmware/weights/w11.h"
 
 #define CHECKPOINT 5000
 
@@ -63,7 +66,7 @@ int main(int argc, char **argv) {
       result_t layer14_out[N_LAYER_13];
 
             // hls-fpga-machine-learning insert top-level-function
-            myproject(input_1,layer14_out);
+            myproject(input_1,layer14_out,w5,w9,w11);
 
             if (e % CHECKPOINT == 0) {
                 std::cout << "Predictions" << std::endl;
@@ -92,7 +95,7 @@ int main(int argc, char **argv) {
     result_t layer14_out[N_LAYER_13];
 
         // hls-fpga-machine-learning insert top-level-function
-        myproject(input_1,layer14_out);
+        myproject(input_1,layer14_out,w5,w9,w11);
 
         // hls-fpga-machine-learning insert output
         nnet::print_result<result_t, N_LAYER_13>(layer14_out, std::cout, true);

@@ -5,14 +5,17 @@
 
 void myproject(
     input_t input_1[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1],
-    result_t layer14_out[N_LAYER_13]
+    result_t layer14_out[N_LAYER_13],
+    model_default_t w5[2400], 
+    model_default_t w9[48000], 
+    model_default_t w11[10080]
 ) {
 
     // hls-fpga-machine-learning insert IO
     #pragma HLS ARRAY_RESHAPE variable=input_1 complete dim=0
     #pragma HLS ARRAY_PARTITION variable=layer14_out complete dim=0
     #pragma HLS INTERFACE ap_vld port=input_1,layer14_out 
-    // #pragma HLS DATAFLOW 
+    #pragma HLS DATAFLOW 
 
 #ifndef __SYNTHESIS__
     static bool loaded_weights = false;

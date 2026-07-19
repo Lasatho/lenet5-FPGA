@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import onnx
 from tensorflow import keras
 import hls4ml
@@ -11,7 +12,7 @@ model.export('lenet5_saved_model')
 
 # convert SavedModel to ONNX via CLI
 subprocess.run([
-    'python3', '-m', 'tf2onnx.convert',
+    sys.executable, '-m', 'tf2onnx.convert',
     '--saved-model', 'lenet5_saved_model',
     '--output', 'lenet5.onnx'
 ], check=True)
@@ -24,7 +25,9 @@ print("ONNX model is valid")
 # configure hls4ml
 hls_config = hls4ml.utils.config_from_keras_model(model, granularity='model')
 hls_config['Model']['Precision'] = 'ap_fixed<16,6>'
-hls_config['Model']['ReuseFactor'] = 64
+hls_config['Model']['Strategy'] = 'Resource'
+hls_config['Model']['ReuseFactor'] = 1500
+hls_config['Model']['BramFactor'] = 1000
 
 # convert to HLS project
 hls_model = hls4ml.converters.convert_from_keras_model(

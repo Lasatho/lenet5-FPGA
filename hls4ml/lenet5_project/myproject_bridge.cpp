@@ -7,6 +7,9 @@
 #include <map>
 
 // hls-fpga-machine-learning insert bram
+#include "firmware/weights/w5.h"
+#include "firmware/weights/w9.h"
+#include "firmware/weights/w11.h"
 
 namespace nnet {
 bool trace_enabled = false;
@@ -58,7 +61,7 @@ void myproject_float(
 
     result_t layer14_out_ap[N_LAYER_13];
 
-    myproject(input_1_ap,layer14_out_ap);
+    myproject(input_1_ap,layer14_out_ap,w5,w9,w11);
 
     nnet::convert_data<result_t, float, N_LAYER_13>(layer14_out_ap, layer14_out);
 }
@@ -72,7 +75,7 @@ void myproject_double(
 
     result_t layer14_out_ap[N_LAYER_13];
 
-    myproject(input_1_ap,layer14_out_ap);
+    myproject(input_1_ap,layer14_out_ap,w5,w9,w11);
 
     nnet::convert_data<result_t, double, N_LAYER_13>(layer14_out_ap, layer14_out);
 }
