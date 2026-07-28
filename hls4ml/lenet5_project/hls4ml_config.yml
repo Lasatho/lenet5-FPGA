@@ -1,18 +1,90 @@
 Backend: Vitis
-ClockPeriod: 5
+ClockPeriod: 14
 HLSConfig:
+  LayerName:
+    average_pooling2d:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    average_pooling2d_1:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    conv2d:
+      Precision:
+        bias: fixed<16,6>
+        result: fixed<16,6>
+        weight: fixed<16,6>
+      ReuseFactor: 150
+      Trace: false
+    conv2d_1:
+      Precision:
+        bias: fixed<16,6>
+        result: fixed<16,6>
+        weight: fixed<16,6>
+      ReuseFactor: 2400
+      Trace: false
+    conv2d_1_relu:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    conv2d_relu:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    dense:
+      Precision:
+        bias: fixed<16,6>
+        result: fixed<16,6>
+        weight: fixed<16,6>
+      ReuseFactor: 8000
+      Trace: false
+    dense_1:
+      Precision:
+        bias: fixed<16,6>
+        result: fixed<16,6>
+        weight: fixed<16,6>
+      ReuseFactor: 1440
+      Trace: false
+    dense_1_relu:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    dense_2:
+      Precision:
+        bias: fixed<16,6>
+        result: fixed<16,6>
+        weight: fixed<16,6>
+      ReuseFactor: 840
+      Trace: false
+    dense_2_softmax:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    dense_relu:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    flatten:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
+    input_1:
+      Precision:
+        result: fixed<16,6>
+      Trace: false
   Model:
-    BramFactor: 1000
+    BramFactor: 100
     Precision: ap_fixed<16,6>
-    ReuseFactor: 1500
+    ReuseFactor: 8000
     Strategy: Resource
     TraceOutput: false
-IOType: io_parallel
+IOType: io_stream
 InputData: null
 KerasModel: !!python/object/apply:tf_keras.src.saving.pickle_utils.deserialize_model_from_bytecode
 - !!binary |
-  UEsDBBQAAAAAAAAAIQC5K3GgQAAAAEAAAAANAAAAbWV0YWRhdGEuanNvbnsia2VyYXNfdmVyc2lv
-  biI6ICIyLjIxLjAiLCAiZGF0ZV9zYXZlZCI6ICIyMDI2LTA3LTE5QDE0OjE0OjQzIn1QSwMEFAAA
+  UEsDBBQAAAAAAAAAIQAF/qLPQAAAAEAAAAANAAAAbWV0YWRhdGEuanNvbnsia2VyYXNfdmVyc2lv
+  biI6ICIyLjIxLjAiLCAiZGF0ZV9zYXZlZCI6ICIyMDI2LTA3LTIyQDE0OjUxOjQ3In1QSwMEFAAA
   AAAAAAAhANJ4O5xIEwAASBMAAAsAAABjb25maWcuanNvbnsibW9kdWxlIjogImtlcmFzIiwgImNs
   YXNzX25hbWUiOiAiU2VxdWVudGlhbCIsICJjb25maWciOiB7Im5hbWUiOiAic2VxdWVudGlhbCIs
   ICJsYXllcnMiOiBbeyJtb2R1bGUiOiAia2VyYXMubGF5ZXJzIiwgImNsYXNzX25hbWUiOiAiSW5w
@@ -100,7 +172,7 @@ KerasModel: !!python/object/apply:tf_keras.src.saving.pickle_utils.deserialize_m
   IjogInNwYXJzZV9jYXRlZ29yaWNhbF9jcm9zc2VudHJvcHkiLCAibWV0cmljcyI6IFsiYWNjdXJh
   Y3kiXSwgImxvc3Nfd2VpZ2h0cyI6IG51bGwsICJ3ZWlnaHRlZF9tZXRyaWNzIjogbnVsbCwgInJ1
   bl9lYWdlcmx5IjogbnVsbCwgInN0ZXBzX3Blcl9leGVjdXRpb24iOiBudWxsLCAiaml0X2NvbXBp
-  bGUiOiBudWxsfX1QSwMEFAAAAAAA1XHzXFf+t6uwwgsAsMILABAAAABtb2RlbC53ZWlnaHRzLmg1
+  bGUiOiBudWxsfX1QSwMEFAAAAAAAd3b2XFf+t6uwwgsAsMILABAAAABtb2RlbC53ZWlnaHRzLmg1
   iUhERg0KGgoAAAAAAAgIAAQAEAAAAAAAAAAAAAAAAAD//////////7DCCwAAAAAA//////////8A
   AAAAAAAAAGAAAAAAAAAAAQAAAAAAAACIAAAAAAAAAKgCAAAAAAAAAQABAAEAAAAYAAAAAAAAABEA
   EAAAAAAAiAAAAAAAAACoAgAAAAAAAFRSRUUAAAEA/////////////////////wAAAAAAAAAA4AUA
@@ -13622,13 +13694,13 @@ KerasModel: !!python/object/apply:tf_keras.src.saving.pickle_utils.deserialize_m
   AAADAYjCCwAAAAAAKAAAAAAAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw
-  KKe9TssIvoUoUTwqnco8yMR2vVDxKz22lRQ8hwVivcCc2z08FiM9UEsBAhQDFAAAAAAAAAAhALkr
-  caBAAAAAQAAAAA0AAAAAAAAAAAAAAIABAAAAAG1ldGFkYXRhLmpzb25QSwECFAMUAAAAAAAAACEA
-  0ng7nEgTAABIEwAACwAAAAAAAAAAAAAAgAFrAAAAY29uZmlnLmpzb25QSwECFAMUAAAAAADVcfNc
+  KKe9TssIvoUoUTwqnco8yMR2vVDxKz22lRQ8hwVivcCc2z08FiM9UEsBAhQDFAAAAAAAAAAhAAX+
+  os9AAAAAQAAAAA0AAAAAAAAAAAAAAIABAAAAAG1ldGFkYXRhLmpzb25QSwECFAMUAAAAAAAAACEA
+  0ng7nEgTAABIEwAACwAAAAAAAAAAAAAAgAFrAAAAY29uZmlnLmpzb25QSwECFAMUAAAAAAB3dvZc
   V/63q7DCCwCwwgsAEAAAAAAAAAAAAAAAgAHcEwAAbW9kZWwud2VpZ2h0cy5oNVBLBQYAAAAAAwAD
   ALIAAAC61gsAAAA=
 OutputDir: ../hls4ml/lenet5_project
 OutputPredictions: null
 Part: xc7z010clg400-1
 ProjectName: myproject
-Stamp: CDe57998
+Stamp: 0b36aed2

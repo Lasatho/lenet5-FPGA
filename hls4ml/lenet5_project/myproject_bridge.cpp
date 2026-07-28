@@ -7,9 +7,12 @@
 #include <map>
 
 // hls-fpga-machine-learning insert bram
+#include "firmware/weights/w2.h"
 #include "firmware/weights/w5.h"
 #include "firmware/weights/w9.h"
+#include "firmware/weights/b9.h"
 #include "firmware/weights/w11.h"
+#include "firmware/weights/w13.h"
 
 namespace nnet {
 bool trace_enabled = false;
@@ -56,12 +59,12 @@ void myproject_float(
     float layer14_out[N_LAYER_13]
 ) {
 
-    input_t input_1_ap[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1];
+    hls::stream<input_t> input_1_ap("input_1");
     nnet::convert_data<float, input_t, N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1>(input_1, input_1_ap);
 
-    result_t layer14_out_ap[N_LAYER_13];
+    hls::stream<result_t> layer14_out_ap("layer14_out");
 
-    myproject(input_1_ap,layer14_out_ap,w5,w9,w11);
+    myproject(input_1_ap,layer14_out_ap,w2,w5,w9,b9,w11,w13);
 
     nnet::convert_data<result_t, float, N_LAYER_13>(layer14_out_ap, layer14_out);
 }
@@ -70,12 +73,12 @@ void myproject_double(
     double input_1[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1],
     double layer14_out[N_LAYER_13]
 ) {
-    input_t input_1_ap[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1];
+    hls::stream<input_t> input_1_ap("input_1");
     nnet::convert_data<double, input_t, N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1>(input_1, input_1_ap);
 
-    result_t layer14_out_ap[N_LAYER_13];
+    hls::stream<result_t> layer14_out_ap("layer14_out");
 
-    myproject(input_1_ap,layer14_out_ap,w5,w9,w11);
+    myproject(input_1_ap,layer14_out_ap,w2,w5,w9,b9,w11,w13);
 
     nnet::convert_data<result_t, double, N_LAYER_13>(layer14_out_ap, layer14_out);
 }

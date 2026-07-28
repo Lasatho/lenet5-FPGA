@@ -8,7 +8,7 @@ array set opt {
     cosim      0
     validation 0
     export     0
-    vsynth     0
+    vsynth     1
     fifo_opt   0
 }
 
@@ -161,7 +161,7 @@ if {$opt(reset)} {
 } else {
     open_solution "solution1"
 }
-catch {config_array_partition -maximum_size 4096}
+catch {config_array_partition -complete_threshold 4096}
 config_compile -name_max_length 80
 set_part $part
 config_schedule -enable_dsp_full_reg=false

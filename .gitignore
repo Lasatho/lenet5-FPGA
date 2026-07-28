@@ -26,3 +26,6 @@ __pycache__/
 
 # Claude session notes (local only)
 CLAUDE.local.md
+
+# MNIST dataset (downloaded on demand by torchvision)
+/data/
