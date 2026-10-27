@@ -24,11 +24,12 @@ pip install -r requirements.txt
 python model/export.py          # aus dem Repo-Root aufrufen
 ```
 `export.py` patcht `nnet_dense_stream.h` (zyklisch partitionierter Dense-Eingangspuffer)
-und schreibt 100 MNIST-Testvektoren nach `tb_data/`. Danach von Hand:
-- `build_opt.tcl`: `cosim 0`, `validation 0`, `vsynth 1`
-- `build_prj.tcl`: `config_array_partition -maximum_size` → `-complete_threshold`
-- `vivado_synth.tcl`: versionierte Fassung (OOC, Placement/Routing, Reports)
-  wiederherstellen, z. B. `git checkout hls4ml/lenet5_project/vivado_synth.tcl`
+und `build_prj.tcl` (`-complete_threshold`, Pfade der C/RTL-Validierung) und schreibt
+100 MNIST-Testvektoren nach `tb_data/`. Danach die versionierten Fassungen von
+`build_opt.tcl` und `vivado_synth.tcl` (OOC, Placement/Routing, Reports) wiederherstellen:
+```
+git checkout hls4ml/lenet5_project/build_opt.tcl hls4ml/lenet5_project/vivado_synth.tcl
+```
 
 Vitis HLS/Vivado laufen unter Windows; das Projekt wird dafür nach
 `C:\Users\lasse\vitis_work\lenet5_project` gespiegelt und dort `build_prj.tcl`

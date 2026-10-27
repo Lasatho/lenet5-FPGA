@@ -128,8 +128,8 @@ proc compare_files {file_1 file_2} {
 }
 
 file mkdir tb_data
-set CSIM_RESULTS "./tb_data/csim_results.log"
-set RTL_COSIM_RESULTS "./tb_data/rtl_cosim_results.log"
+set CSIM_RESULTS "./${project_name}_prj/solution1/csim/build/tb_data/csim_results.log"
+set RTL_COSIM_RESULTS "./${project_name}_prj/solution1/sim/wrapc_pc/tb_data/rtl_cosim_results.log"
 
 if {$opt(reset)} {
     open_project -reset ${project_name}_prj
@@ -177,7 +177,7 @@ if {$opt(cosim)} {
     add_files -tb ${project_name}_test.cpp -cflags "-std=c++0x -DRTL_SIM"
     set time_start [clock clicks -milliseconds]
 
-    cosim_design -trace_level all -setup
+    cosim_design -trace_level none -setup
 
     if {$opt(fifo_opt)} {
         puts "\[hls4ml\] - FIFO optimization started"

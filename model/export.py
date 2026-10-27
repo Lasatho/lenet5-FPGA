@@ -151,6 +151,14 @@ print("hls4ml compatibility check passed")
 # generate C++ HLS code
 hls_model.compile()
 
+def patch_file(path, old, new):
+    with open(path) as f:
+        src = f.read()
+    assert src.count(old) == 1, f'{path} changed, patch needs review: {old!r}'
+    with open(path, 'w') as f:
+        f.write(src.replace(old, new))
+
+
 # io_stream dense collects its input stream into an array that hls4ml partitions
 # completely, i.e. n_in registers plus a n_in:1 mux in front of the reuse loop. With
 # RF >= n_in only one element is read per cycle, so cyclic banks matching the stream
@@ -158,13 +166,25 @@ hls_model.compile()
 # unchanged). Saves ~8.6K FF / ~4K LUT on fc and made place_design succeed (Lauf U, see
 # project notes "experimente_lut_reduktion"). Patched after compile() because
 # write()/compile() regenerate nnet_utils.
-dense_stream_h = 'hls4ml/lenet5_project/firmware/nnet_utils/nnet_dense_stream.h'
-with open(dense_stream_h) as f:
-    src = f.read()
-old = '#pragma HLS ARRAY_PARTITION variable=data complete'
-assert src.count(old) == 1, 'nnet_dense_stream.h changed, partition patch needs review'
-with open(dense_stream_h, 'w') as f:
-    f.write(src.replace(old, '#pragma HLS ARRAY_PARTITION variable=data cyclic factor=data_T::size'))
+patch_file('hls4ml/lenet5_project/firmware/nnet_utils/nnet_dense_stream.h',
+           '#pragma HLS ARRAY_PARTITION variable=data complete',
+           '#pragma HLS ARRAY_PARTITION variable=data cyclic factor=data_T::size')
+
+# build_prj.tcl template fixes for Vitis HLS 2024.2 (see project notes "export_pipeline"):
+# - config_array_partition -maximum_size is obsolete and fails silently inside catch{}
+# - the validation step compares ./tb_data/*.log, but Vitis HLS writes the csim log to
+#   csim/build/tb_data and the post-RTL-sim log to sim/wrapc_pc/tb_data, so validation
+#   always reported "Test failed"
+build_prj = 'hls4ml/lenet5_project/build_prj.tcl'
+patch_file(build_prj, 'config_array_partition -maximum_size', 'config_array_partition -complete_threshold')
+patch_file(build_prj, 'set CSIM_RESULTS "./tb_data/csim_results.log"',
+           'set CSIM_RESULTS "./${project_name}_prj/solution1/csim/build/tb_data/csim_results.log"')
+patch_file(build_prj, 'set RTL_COSIM_RESULTS "./tb_data/rtl_cosim_results.log"',
+           'set RTL_COSIM_RESULTS "./${project_name}_prj/solution1/sim/wrapc_pc/tb_data/rtl_cosim_results.log"')
+# cosim with -trace_level all (waveform database + dataflow viewer) stalled xsim on
+# Windows twice mid-run (after 94 and 6 of 100 images, processes idle, no RTL
+# deadlock); -trace_level none passed all 100 images in 6.5 min
+patch_file(build_prj, 'cosim_design -trace_level all -setup', 'cosim_design -trace_level none -setup')
 
 # testbench data for csim/cosim (tb_data was empty, the testbench then falls back to
 # 5 all-zero inputs): first TB_SAMPLES MNIST test images with the training
