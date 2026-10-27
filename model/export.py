@@ -185,6 +185,11 @@ patch_file(build_prj, 'set RTL_COSIM_RESULTS "./tb_data/rtl_cosim_results.log"',
 # Windows twice mid-run (after 94 and 6 of 100 images, processes idle, no RTL
 # deadlock); -trace_level none passed all 100 images in 6.5 min
 patch_file(build_prj, 'cosim_design -trace_level all -setup', 'cosim_design -trace_level none -setup')
+# package the IP under a descriptive VLNV instead of xilinx.com:hls:myproject
+patch_file(build_prj, 'export_design -format ip_catalog -version $version',
+           'export_design -format ip_catalog -version $version -vendor lasatho -library hls '
+           '-ipname lenet5_mnist -display_name {LeNet-5 MNIST (hls4ml)} '
+           '-description {LeNet-5 MNIST classifier, ap_fixed<11,5>, AXI-Stream in/out}')
 
 # testbench data for csim/cosim (tb_data was empty, the testbench then falls back to
 # 5 all-zero inputs): first TB_SAMPLES MNIST test images with the training

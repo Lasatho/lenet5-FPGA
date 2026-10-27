@@ -218,7 +218,7 @@ if {$opt(validation)} {
 if {$opt(export)} {
     puts "***** EXPORT IP *****"
     set time_start [clock clicks -milliseconds]
-    export_design -format ip_catalog -version $version
+    export_design -format ip_catalog -version $version -vendor lasatho -library hls -ipname lenet5_mnist -display_name {LeNet-5 MNIST (hls4ml)} -description {LeNet-5 MNIST classifier, ap_fixed<11,5>, AXI-Stream in/out}
     set time_end [clock clicks -milliseconds]
     report_time "EXPORT IP" $time_start $time_end
 }
