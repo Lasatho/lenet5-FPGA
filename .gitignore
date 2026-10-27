@@ -29,3 +29,6 @@ CLAUDE.local.md
 
 # MNIST dataset (downloaded on demand by torchvision)
 /data/
+
+# hls4ml compile() bridge libraries
+/hls4ml/lenet5_project/firmware/myproject-*.so

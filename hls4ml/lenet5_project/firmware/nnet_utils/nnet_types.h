@@ -30,6 +30,49 @@ template <typename T, unsigned N> struct array {
         }
         return *this;
     }
+
+    bool operator==(const array &other) const {
+        if (N != other.size) {
+            return false;
+        }
+
+        for (unsigned i = 0; i < N; i++) {
+            if (data[i] != other[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool operator!=(const array &other) const { return !(*this == other); }
+};
+
+// Generic lookup-table implementation, for use in approximations of math functions
+template <typename T, unsigned N, T (*func)(T)> class lookup_table {
+  public:
+    lookup_table(T from, T to) : range_start(from), range_end(to), base_div(ap_uint<16>(N) / T(to - from)) {
+        T step = (range_end - range_start) / ap_uint<16>(N);
+        for (size_t i = 0; i < N; i++) {
+            T num = range_start + ap_uint<16>(i) * step;
+            T sample = func(num);
+            samples[i] = sample;
+        }
+    }
+
+    T operator()(T n) const {
+        int index = (n - range_start) * base_div;
+        if (index < 0)
+            index = 0;
+        else if (index > N - 1)
+            index = N - 1;
+        return samples[index];
+    }
+
+  private:
+    T samples[N];
+    const T range_start, range_end;
+    ap_fixed<20, 16> base_div;
 };
 
 } // namespace nnet

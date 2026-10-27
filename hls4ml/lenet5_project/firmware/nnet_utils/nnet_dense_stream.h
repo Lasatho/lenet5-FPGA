@@ -85,13 +85,13 @@ void dense(hls::stream<data_T> &data_stream, hls::stream<res_T> &res_stream,
     #pragma HLS INLINE recursive
 
     typename data_T::value_type data[CONFIG_T::n_in];
-    #pragma HLS ARRAY_PARTITION variable=data complete
+    #pragma HLS ARRAY_PARTITION variable=data cyclic factor=data_T::size
 
     typename res_T::value_type res[CONFIG_T::n_out];
     #pragma HLS ARRAY_PARTITION variable=res complete
 
     data_prepare<data_T, CONFIG_T>(data_stream, data);
-    if (CONFIG_T::strategy == nnet::latency) {
+    if (CONFIG_T::strategy == nnet::latency || CONFIG_T::strategy == nnet::distributed_arithmetic) {
         dense_latency_wrapper<typename data_T::value_type, typename res_T::value_type, CONFIG_T>(data, res, weights, biases);
     } else {
         dense_resource_wrapper<typename data_T::value_type, typename res_T::value_type, CONFIG_T>(data, res, weights,

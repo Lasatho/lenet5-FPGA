@@ -1,19 +1,10 @@
 #################
 #    HLS4ML
 #################
-array set opt {
-    reset      0
-    csim       1
-    synth      1
-    cosim      0
-    validation 0
-    export     0
-    vsynth     1
-    fifo_opt   0
-}
 
 set tcldir [file dirname [info script]]
 source [file join $tcldir project.tcl]
+source [file join $tcldir build_opt.tcl]
 
 proc remove_recursive_log_wave {} {
     set tcldir [file dirname [info script]]
@@ -108,12 +99,6 @@ proc add_vcd_instructions_tcl {} {
     file rename -force $temp $filename
 }
 
-foreach arg $::argv {
-    foreach o [lsort [array names opt]] {
-        regexp "$o=+(\\w+)" $arg unused opt($o)
-    }
-}
-
 proc report_time { op_name time_start time_end } {
     set time_taken [expr $time_end - $time_start]
     set time_s [expr ($time_taken / 1000) % 60]
@@ -161,7 +146,7 @@ if {$opt(reset)} {
 } else {
     open_solution "solution1"
 }
-catch {config_array_partition -complete_threshold 4096}
+catch {config_array_partition -complete_threshold $maximum_size}
 config_compile -name_max_length 80
 set_part $part
 config_schedule -enable_dsp_full_reg=false
@@ -179,6 +164,7 @@ if {$opt(csim)} {
 
 if {$opt(synth)} {
     puts "***** C/RTL SYNTHESIS *****"
+
     set time_start [clock clicks -milliseconds]
     csynth_design
     set time_end [clock clicks -milliseconds]
@@ -195,7 +181,10 @@ if {$opt(cosim)} {
 
     if {$opt(fifo_opt)} {
         puts "\[hls4ml\] - FIFO optimization started"
-        add_vcd_instructions_tcl
+
+        if {[string equal "$backend" "vivado"] || [string equal $backend "vivadoaccelerator"]} {
+            add_vcd_instructions_tcl
+        }
     }
 
     remove_recursive_log_wave
@@ -229,20 +218,20 @@ if {$opt(validation)} {
 if {$opt(export)} {
     puts "***** EXPORT IP *****"
     set time_start [clock clicks -milliseconds]
-    export_design -format ip_catalog
+    export_design -format ip_catalog -version $version
     set time_end [clock clicks -milliseconds]
     report_time "EXPORT IP" $time_start $time_end
 }
 
 if {$opt(vsynth)} {
     puts "***** VIVADO SYNTHESIS *****"
-    if {[file exist ${project_name}_prj/solution1/syn/vhdl]} {
+    if {[file exist ${project_name}_prj/solution1/syn/verilog]} {
         set time_start [clock clicks -milliseconds]
         exec vivado -mode batch -source vivado_synth.tcl >@ stdout
         set time_end [clock clicks -milliseconds]
         report_time "VIVADO SYNTHESIS" $time_start $time_end
     } else {
-        puts "ERROR: Cannot find generated VHDL files. Did you run C synthesis?"
+        puts "ERROR: Cannot find generated Verilog files. Did you run C synthesis?"
         exit 1
     }
 }

@@ -1,10 +1,14 @@
 variable project_name
 set project_name "myproject"
 variable backend
-set backend "vivado"
+set backend "vitis"
 variable part
 set part "xc7z010clg400-1"
 variable clock_period
-set clock_period 14
+set clock_period 20
 variable clock_uncertainty
-set clock_uncertainty 12.5%
+set clock_uncertainty 27%
+variable version
+set version "1.0.0"
+variable maximum_size
+set maximum_size 4096

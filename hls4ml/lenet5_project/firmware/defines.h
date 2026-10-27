@@ -4,73 +4,54 @@
 #include "ap_fixed.h"
 #include "ap_int.h"
 #include "nnet_utils/nnet_types.h"
+#include <array>
 #include <cstddef>
 #include <cstdio>
+#include <tuple>
+#include <tuple>
+
 
 // hls-fpga-machine-learning insert numbers
-#define N_INPUT_1_1 32
-#define N_INPUT_2_1 32
-#define N_INPUT_3_1 1
-#define OUT_HEIGHT_2 28
-#define OUT_WIDTH_2 28
-#define N_FILT_2 6
-#define OUT_HEIGHT_2 28
-#define OUT_WIDTH_2 28
-#define N_FILT_2 6
-#define OUT_HEIGHT_4 14
-#define OUT_WIDTH_4 14
-#define N_FILT_4 6
-#define OUT_HEIGHT_5 10
-#define OUT_WIDTH_5 10
-#define N_FILT_5 16
-#define OUT_HEIGHT_5 10
-#define OUT_WIDTH_5 10
-#define N_FILT_5 16
-#define OUT_HEIGHT_7 5
-#define OUT_WIDTH_7 5
-#define N_FILT_7 16
-#define N_SIZE_0_8 400
-#define N_LAYER_9 120
-#define N_LAYER_9 120
-#define N_LAYER_11 84
-#define N_LAYER_11 84
-#define N_LAYER_13 10
-#define N_LAYER_13 10
 
 // hls-fpga-machine-learning insert layer-precision
-typedef nnet::array<ap_fixed<16,6>, 1*1> input_t;
-typedef ap_fixed<16,6> model_default_t;
-typedef nnet::array<ap_fixed<16,6>, 6*1> layer2_t;
-typedef ap_fixed<16,6> conv2d_weight_t;
-typedef ap_fixed<16,6> conv2d_bias_t;
-typedef nnet::array<ap_fixed<16,6>, 6*1> layer3_t;
-typedef ap_fixed<18,8> conv2d_relu_table_t;
-typedef nnet::array<ap_fixed<16,6>, 6*1> layer4_t;
-typedef nnet::array<ap_fixed<16,6>, 16*1> layer5_t;
-typedef ap_fixed<16,6> conv2d_1_weight_t;
-typedef ap_fixed<16,6> conv2d_1_bias_t;
-typedef nnet::array<ap_fixed<16,6>, 16*1> layer6_t;
-typedef ap_fixed<18,8> conv2d_1_relu_table_t;
-typedef nnet::array<ap_fixed<16,6>, 16*1> layer7_t;
-typedef nnet::array<ap_fixed<16,6>, 120*1> layer9_t;
-typedef ap_fixed<16,6> dense_weight_t;
-typedef ap_fixed<16,6> dense_bias_t;
-typedef ap_uint<1> layer9_index;
-typedef nnet::array<ap_fixed<16,6>, 120*1> layer10_t;
-typedef ap_fixed<18,8> dense_relu_table_t;
-typedef nnet::array<ap_fixed<16,6>, 84*1> layer11_t;
-typedef ap_fixed<16,6> dense_1_weight_t;
-typedef ap_fixed<16,6> dense_1_bias_t;
+typedef nnet::array<ap_fixed<11,5>, 1*1> input_t;
+typedef ap_fixed<28,16> layer1_0_accum_t;
+typedef nnet::array<ap_fixed<28,16>, 6*1> layer1_0_result_t;
+typedef ap_fixed<11,5> layer1_0_weight_t;
+typedef ap_fixed<11,5> layer1_0_bias_t;
+typedef nnet::array<ap_fixed<11,5>, 6*1> layer4_t;
+typedef ap_fixed<18,8> layer1_2_table_t;
+typedef ap_fixed<11,5> layer1_3_accum_t;
+typedef nnet::array<ap_fixed<11,5>, 6*1> layer5_t;
+typedef ap_fixed<31,19> layer2_0_accum_t;
+typedef nnet::array<ap_fixed<31,19>, 16*1> layer2_0_result_t;
+typedef ap_fixed<11,5> layer2_0_weight_t;
+typedef ap_fixed<11,5> layer2_0_bias_t;
+typedef nnet::array<ap_fixed<11,5>, 16*1> layer8_t;
+typedef ap_fixed<18,8> layer2_2_table_t;
+typedef ap_fixed<11,5> layer2_3_accum_t;
+typedef nnet::array<ap_fixed<11,5>, 16*1> layer9_t;
+typedef ap_fixed<32,20> fc_accum_t;
+typedef nnet::array<ap_fixed<11,5,AP_TRN,AP_SAT,0>, 36*1> layer11_t;
+typedef ap_fixed<11,5> fc_weight_t;
+typedef ap_fixed<11,5> fc_bias_t;
 typedef ap_uint<1> layer11_index;
-typedef nnet::array<ap_fixed<16,6>, 84*1> layer12_t;
-typedef ap_fixed<18,8> dense_1_relu_table_t;
-typedef nnet::array<ap_fixed<16,6>, 10*1> layer13_t;
-typedef ap_fixed<16,6> dense_2_weight_t;
-typedef ap_fixed<16,6> dense_2_bias_t;
+typedef nnet::array<ap_fixed<11,5>, 36*1> layer12_t;
+typedef ap_fixed<18,8> relu_table_t;
+typedef ap_fixed<29,17> fc1_accum_t;
+typedef nnet::array<ap_fixed<11,5,AP_TRN,AP_SAT,0>, 25*1> layer13_t;
+typedef ap_fixed<11,5> fc1_weight_t;
+typedef ap_fixed<11,5> fc1_bias_t;
 typedef ap_uint<1> layer13_index;
-typedef nnet::array<ap_fixed<16,6>, 10*1> result_t;
-typedef ap_fixed<18,8> dense_2_softmax_table_t;
-typedef ap_fixed<18,8,AP_RND,AP_SAT> dense_2_softmax_exp_table_t;
-typedef ap_fixed<18,8,AP_RND,AP_SAT> dense_2_softmax_inv_table_t;
+typedef nnet::array<ap_fixed<11,5>, 25*1> layer14_t;
+typedef ap_fixed<18,8> relu1_table_t;
+typedef ap_fixed<28,16> fc2_accum_t;
+typedef nnet::array<ap_fixed<28,16>, 10*1> result_t;
+typedef ap_fixed<11,5> fc2_weight_t;
+typedef ap_fixed<11,5> fc2_bias_t;
+typedef ap_uint<1> layer15_index;
+
+// hls-fpga-machine-learning insert emulator-defines
+
 
 #endif

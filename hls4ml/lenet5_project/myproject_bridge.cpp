@@ -7,12 +7,6 @@
 #include <map>
 
 // hls-fpga-machine-learning insert bram
-#include "firmware/weights/w2.h"
-#include "firmware/weights/w5.h"
-#include "firmware/weights/w9.h"
-#include "firmware/weights/b9.h"
-#include "firmware/weights/w11.h"
-#include "firmware/weights/w13.h"
 
 namespace nnet {
 bool trace_enabled = false;
@@ -53,34 +47,37 @@ void collect_trace_output(struct trace_data *c_trace_outputs) {
     }
 }
 
+// hls-fpga-machine-learning insert tb_input_writer
+
 // Wrapper of top level function for Python bridge
 void myproject_float(
-    float input_1[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1],
-    float layer14_out[N_LAYER_13]
+    float *x,
+    float *layer15_out
 ) {
 
-    hls::stream<input_t> input_1_ap("input_1");
-    nnet::convert_data<float, input_t, N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1>(input_1, input_1_ap);
+    hls::stream<input_t> x_ap("x");
+    nnet::convert_data<float, input_t, 32*32*1>(x, x_ap);
 
-    hls::stream<result_t> layer14_out_ap("layer14_out");
+    hls::stream<result_t> layer15_out_ap("layer15_out");
 
-    myproject(input_1_ap,layer14_out_ap,w2,w5,w9,b9,w11,w13);
+    myproject(x_ap,layer15_out_ap);
 
-    nnet::convert_data<result_t, float, N_LAYER_13>(layer14_out_ap, layer14_out);
+    nnet::convert_data<result_t, float, 10>(layer15_out_ap, layer15_out);
 }
 
 void myproject_double(
-    double input_1[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1],
-    double layer14_out[N_LAYER_13]
+    double *x,
+    double *layer15_out
 ) {
-    hls::stream<input_t> input_1_ap("input_1");
-    nnet::convert_data<double, input_t, N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1>(input_1, input_1_ap);
 
-    hls::stream<result_t> layer14_out_ap("layer14_out");
+    hls::stream<input_t> x_ap("x");
+    nnet::convert_data<double, input_t, 32*32*1>(x, x_ap);
 
-    myproject(input_1_ap,layer14_out_ap,w2,w5,w9,b9,w11,w13);
+    hls::stream<result_t> layer15_out_ap("layer15_out");
 
-    nnet::convert_data<result_t, double, N_LAYER_13>(layer14_out_ap, layer14_out);
+    myproject(x_ap,layer15_out_ap);
+
+    nnet::convert_data<result_t, double, 10>(layer15_out_ap, layer15_out);
 }
 }
 
