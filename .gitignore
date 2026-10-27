@@ -32,3 +32,6 @@ CLAUDE.local.md
 
 # hls4ml compile() bridge libraries
 /hls4ml/lenet5_project/firmware/myproject-*.so
+
+# model plot written by model/export.py into the working directory
+/hls4ml_model.png
