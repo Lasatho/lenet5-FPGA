@@ -35,3 +35,8 @@ CLAUDE.local.md
 
 # model plot written by model/export.py into the working directory
 /hls4ml_model.png
+
+# AXI-Lite wrapper build output (hls4ml/wrapper/build_wrapper.tcl)
+/hls4ml/wrapper/lenet5_axilite_prj/
+/hls4ml/wrapper/vivado_synth.tcl
+/hls4ml/wrapper/vivado_*.rpt

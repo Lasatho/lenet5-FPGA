@@ -17,6 +17,8 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
 - `model/precision_sweep.py` – bitgenauer Precision-Sweep in hls4ml (ohne Vitis)
 - `model/export.py` – Export nach `hls4ml/lenet5_project/`
 - `hls4ml/templates/` – versionierte `build_opt.tcl`/`vivado_synth.tcl`, von `export.py` ins Projekt kopiert
+- `hls4ml/wrapper/` – AXI-Lite-Wrapper `lenet5_axilite` um den Kern (Bild, Logits und
+  Steuerung über ein `s_axilite`-Interface), Testbench und `build_wrapper.tcl`
 - `ip_repo/lenet5_mnist_1_0/` – exportierter Kern `lasatho:hls:lenet5_mnist:1.0`
   (AXI-Stream ohne `TLAST`, `ap_ctrl_hs`); in Vivado als IP-Repository `ip_repo/` eintragen
 - `vivado/`, `vitis/`, `pc_client/` – noch leer
@@ -35,3 +37,9 @@ Skripten dort vornehmen.
 Vitis HLS/Vivado laufen unter Windows; das Projekt wird dafür nach
 `C:\Users\lasse\vitis_work\lenet5_project` gespiegelt und dort `build_prj.tcl`
 per PowerShell ausgeführt.
+
+AXI-Lite-Wrapper (setzt das generierte `hls4ml/lenet5_project/` voraus): `hls4ml/` mit
+`lenet5_project/`, `wrapper/` und `templates/` spiegeln, im Ordner `wrapper/`
+`vitis_hls -f build_wrapper.tcl` ausführen; Schritte über `opt` am Skriptanfang. Die
+Testbench vergleicht je Bild bitgenau mit `myproject()` und mit `tb_output_predictions.dat`.
+Logits stehen vorzeichenerweitert als 32-Bit-Rohwert im Register (Wert = Wort / 2^12).
