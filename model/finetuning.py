@@ -123,35 +123,36 @@ def objective(trial):
     return accuracy, nparams
 
 
-# Multi-objective: maximize accuracy, minimize params
-study = optuna.create_study(
-    directions=["maximize", "minimize"],
-    study_name="lenet5_pruning",
-)
+if __name__ == "__main__":
+    # Multi-objective: maximize accuracy, minimize params
+    study = optuna.create_study(
+        directions=["maximize", "minimize"],
+        study_name="lenet5_pruning",
+    )
 
-study.optimize(objective, n_trials=20)
+    study.optimize(objective, n_trials=20)
 
-# ============= RESULTS =================
-print("\n===== PARETO-FRONT =====")
-for trial in study.best_trials:
-    print(f"Trial {trial.number}: "
-          f"Acc={trial.values[0]:.2f}%, "
-          f"Params={trial.values[1]/1e3:.1f}K, "
-          f"Config={trial.params}")
+    # ============= RESULTS =================
+    print("\n===== PARETO-FRONT =====")
+    for trial in study.best_trials:
+        print(f"Trial {trial.number}: "
+              f"Acc={trial.values[0]:.2f}%, "
+              f"Params={trial.values[1]/1e3:.1f}K, "
+              f"Config={trial.params}")
 
-# Save the best model (highest accuracy among pareto-optimal)
-best_trial = max(study.best_trials, key=lambda t: t.values[0])
-print(f"\nBest trial: {best_trial.number} with Acc={best_trial.values[0]:.2f}%, Params={best_trial.values[1]/1e3:.1f}K")
+    # Save the best model (highest accuracy among pareto-optimal)
+    best_trial = max(study.best_trials, key=lambda t: t.values[0])
+    print(f"\nBest trial: {best_trial.number} with Acc={best_trial.values[0]:.2f}%, Params={best_trial.values[1]/1e3:.1f}K")
 
-# Re-run best config to get the actual model for saving
-best_model = copy.deepcopy(baseline_model).to(device)
-acc, params = prune_and_evaluate(
-    best_model,
-    best_trial.params["ratio_fc"],
-    best_trial.params["ratio_fc1"],
-    best_trial.params["iterative_steps"],
-    best_trial.params["fine_tune_epochs"],
-    best_trial.params["fine_tune_lr"],
-)
-torch.save(best_model, "model/pruned_best.pth")
-print(f"Saved best model: Acc={acc:.2f}%, Params={params/1e3:.1f}K")
+    # Re-run best config to get the actual model for saving
+    best_model = copy.deepcopy(baseline_model).to(device)
+    acc, params = prune_and_evaluate(
+        best_model,
+        best_trial.params["ratio_fc"],
+        best_trial.params["ratio_fc1"],
+        best_trial.params["iterative_steps"],
+        best_trial.params["fine_tune_epochs"],
+        best_trial.params["fine_tune_lr"],
+    )
+    torch.save(best_model, "model/pruned_best.pth")
+    print(f"Saved best model: Acc={acc:.2f}%, Params={params/1e3:.1f}K")
