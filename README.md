@@ -16,6 +16,9 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
 - `model/rebuild_trial7.py` – Nachbau des gewählten Modells nach `model/pruned_best.pth`
 - `model/precision_sweep.py` – bitgenauer Precision-Sweep in hls4ml (ohne Vitis)
 - `model/export.py` – Export nach `hls4ml/lenet5_project/`
+- `hls4ml/templates/` – versionierte `build_opt.tcl`/`vivado_synth.tcl`, von `export.py` ins Projekt kopiert
+- `ip_repo/lenet5_mnist_1_0/` – exportierter Kern `lasatho:hls:lenet5_mnist:1.0`
+  (AXI-Stream ohne `TLAST`, `ap_ctrl_hs`); in Vivado als IP-Repository `ip_repo/` eintragen
 - `vivado/`, `vitis/`, `pc_client/` – noch leer
 
 ## Ablauf
@@ -25,11 +28,9 @@ python model/export.py          # aus dem Repo-Root aufrufen
 ```
 `export.py` patcht `nnet_dense_stream.h` (zyklisch partitionierter Dense-Eingangspuffer)
 und `build_prj.tcl` (`-complete_threshold`, Pfade der C/RTL-Validierung) und schreibt
-100 MNIST-Testvektoren nach `tb_data/`. Danach die versionierten Fassungen von
-`build_opt.tcl` und `vivado_synth.tcl` (OOC, Placement/Routing, Reports) wiederherstellen:
-```
-git checkout hls4ml/lenet5_project/build_opt.tcl hls4ml/lenet5_project/vivado_synth.tcl
-```
+100 MNIST-Testvektoren nach `tb_data/`. `build_opt.tcl` und `vivado_synth.tcl` (OOC,
+Placement/Routing, Reports) kopiert es aus `hls4ml/templates/`; Änderungen an diesen
+Skripten dort vornehmen.
 
 Vitis HLS/Vivado laufen unter Windows; das Projekt wird dafür nach
 `C:\Users\lasse\vitis_work\lenet5_project` gespiegelt und dort `build_prj.tcl`
