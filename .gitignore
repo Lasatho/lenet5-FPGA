@@ -40,3 +40,9 @@ CLAUDE.local.md
 /hls4ml/wrapper/lenet5_axilite_prj/
 /hls4ml/wrapper/vivado_synth.tcl
 /hls4ml/wrapper/vivado_*.rpt
+
+# block design build output (vivado/create_bd.tcl)
+/vivado/lenet5_zybo/
+/vivado/lenet5_zybo.xsa
+/vivado/hook_*.tcl
+/vivado/bd_*.rpt

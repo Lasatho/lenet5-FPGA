@@ -23,7 +23,9 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
   (AXI-Stream ohne `TLAST`, `ap_ctrl_hs`); in Vivado als IP-Repository `ip_repo/` eintragen
 - `ip_repo/lenet5_axilite_1_0/` – AXI-Lite-Wrapper `lasatho:hls:lenet5_axilite:1.0` samt
   Bare-Metal-Treiber (`drivers/`), Adresskarte in `xlenet5_axilite_hw.h`
-- `vivado/`, `vitis/`, `pc_client/` – noch leer
+- `vivado/create_bd.tcl` – Block Design (PS7 + `lenet5_axilite` an M_AXI_GP0, 50 MHz),
+  Bitstream und XSA für das ZYBO
+- `vitis/`, `pc_client/` – noch leer
 
 ## Ablauf
 ```
