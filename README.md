@@ -21,6 +21,8 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
   Steuerung über ein `s_axilite`-Interface), Testbench und `build_wrapper.tcl`
 - `ip_repo/lenet5_mnist_1_0/` – exportierter Kern `lasatho:hls:lenet5_mnist:1.0`
   (AXI-Stream ohne `TLAST`, `ap_ctrl_hs`); in Vivado als IP-Repository `ip_repo/` eintragen
+- `ip_repo/lenet5_axilite_1_0/` – AXI-Lite-Wrapper `lasatho:hls:lenet5_axilite:1.0` samt
+  Bare-Metal-Treiber (`drivers/`), Adresskarte in `xlenet5_axilite_hw.h`
 - `vivado/`, `vitis/`, `pc_client/` – noch leer
 
 ## Ablauf
