@@ -191,6 +191,13 @@ patch_file(build_prj, 'export_design -format ip_catalog -version $version',
            '-ipname lenet5_mnist -display_name {LeNet-5 MNIST (hls4ml)} '
            '-description {LeNet-5 MNIST classifier, ap_fixed<11,5>, AXI-Stream in/out}')
 
+# build_opt.tcl (step switches) and vivado_synth.tcl (OOC synthesis, clock constraint,
+# control-set reports, place/route) are regenerated from hls4ml's templates on every
+# export; restore the versioned versions from hls4ml/templates
+import shutil
+for name in ('build_opt.tcl', 'vivado_synth.tcl'):
+    shutil.copyfile(f'hls4ml/templates/{name}', f'hls4ml/lenet5_project/{name}')
+
 # testbench data for csim/cosim (tb_data was empty, the testbench then falls back to
 # 5 all-zero inputs): first TB_SAMPLES MNIST test images with the training
 # preprocessing, expected outputs from the bit-accurate emulation
