@@ -50,3 +50,5 @@ CLAUDE.local.md
 # Vitis platform workspace (vitis/create_platform.py)
 /vitis/workspace/
 
+# preprocessed test set and C reference output (pc_client/prepare_dataset.py, c_reference.cpp)
+/pc_client/data/

@@ -27,7 +27,11 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
   Bitstream und XSA für das ZYBO
 - `vitis/create_platform.py` – Vitis-Plattform `lenet5_zybo_pf` aus der XSA (Standalone auf
   `ps7_cortexa9_0`, FSBL, stdin/stdout auf UART1)
-- `pc_client/` – noch leer
+- `pc_client/prepare_dataset.py` – Vorverarbeitung des MNIST-Testsatzes auf dem PC (Resize
+  32×32, Normalisierung, `ap_fixed<11,5>`-Rohwörter als `int16`) nach `pc_client/data/`
+- `pc_client/c_reference.cpp` – bitgenaue Referenz für den Hardwaretest: prüft die
+  Quantisierung gegen `ap_fixed`, rechnet alle Bilder durch das C-Modell `myproject()`
+- `pc_client/send_image.py` – noch leer
 
 ## Ablauf
 ```
@@ -54,3 +58,14 @@ Vitis-Plattform (Vitis 2024.2, unter Windows): `vitis -s vitis/create_platform.p
 <lenet5_zybo.xsa> [<workspace>]`; der Workspace (Standard `vitis/workspace`) wird bei
 jedem Lauf neu angelegt, die Plattform liegt danach unter
 `lenet5_zybo_pf/export/lenet5_zybo_pf/lenet5_zybo_pf.xpfm`.
+
+Testdaten für die Hardware (aus dem Repo-Root, setzt `hls4ml/lenet5_project/` voraus):
+```
+python pc_client/prepare_dataset.py
+g++ -O2 -std=c++14 -I hls4ml/lenet5_project/firmware -I hls4ml/lenet5_project/firmware/ap_types \
+    pc_client/c_reference.cpp hls4ml/lenet5_project/firmware/myproject.cpp -o pc_client/data/c_reference
+pc_client/data/c_reference
+```
+`c_reference` schreibt die erwarteten Logits (`ref_logits.bin`, dieselben 32-Bit-Wörter wie
+der Wrapper) und bricht ab, wenn die Quantisierung oder die ersten Bilder nicht bitgleich zu
+`tb_output_predictions.dat` sind.
