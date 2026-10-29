@@ -46,3 +46,7 @@ CLAUDE.local.md
 /vivado/lenet5_zybo.xsa
 /vivado/hook_*.tcl
 /vivado/bd_*.rpt
+
+# Vitis platform workspace (vitis/create_platform.py)
+/vitis/workspace/
+

@@ -25,7 +25,9 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
   Bare-Metal-Treiber (`drivers/`), Adresskarte in `xlenet5_axilite_hw.h`
 - `vivado/create_bd.tcl` – Block Design (PS7 + `lenet5_axilite` an M_AXI_GP0, 50 MHz),
   Bitstream und XSA für das ZYBO
-- `vitis/`, `pc_client/` – noch leer
+- `vitis/create_platform.py` – Vitis-Plattform `lenet5_zybo_pf` aus der XSA (Standalone auf
+  `ps7_cortexa9_0`, FSBL, stdin/stdout auf UART1)
+- `pc_client/` – noch leer
 
 ## Ablauf
 ```
@@ -47,3 +49,8 @@ AXI-Lite-Wrapper (setzt das generierte `hls4ml/lenet5_project/` voraus): `hls4ml
 `vitis_hls -f build_wrapper.tcl` ausführen; Schritte über `opt` am Skriptanfang. Die
 Testbench vergleicht je Bild bitgenau mit `myproject()` und mit `tb_output_predictions.dat`.
 Logits stehen vorzeichenerweitert als 32-Bit-Rohwert im Register (Wert = Wort / 2^12).
+
+Vitis-Plattform (Vitis 2024.2, unter Windows): `vitis -s vitis/create_platform.py
+<lenet5_zybo.xsa> [<workspace>]`; der Workspace (Standard `vitis/workspace`) wird bei
+jedem Lauf neu angelegt, die Plattform liegt danach unter
+`lenet5_zybo_pf/export/lenet5_zybo_pf/lenet5_zybo_pf.xpfm`.
