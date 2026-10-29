@@ -27,11 +27,18 @@ ZYBO, Xilinx Zynq XC7Z010-1CLG400C.
   Bitstream und XSA für das ZYBO
 - `vitis/create_platform.py` – Vitis-Plattform `lenet5_zybo_pf` aus der XSA (Standalone auf
   `ps7_cortexa9_0`, FSBL, stdin/stdout auf UART1)
+- `vitis/create_app.py`, `vitis/app/src/` – Bare-Metal-App `lenet5_app` (UART-Protokoll in
+  `protocol.h`, Inferenz per UART oder über den Testsatz im DDR)
+- `vitis/jtag.tcl` – `xsct`-Hilfsskript: Board starten (`boot`), Testsatz ins DDR laden
+  (`load`), Ergebnisse zurücklesen (`read`)
+- `vitis/app/host_test/` – Test der App und des PC-Clients ohne Board: `main.c` mit Stubs
+  auf dem Host, C-Modell als IP, Pseudo-Terminal als UART
 - `pc_client/prepare_dataset.py` – Vorverarbeitung des MNIST-Testsatzes auf dem PC (Resize
   32×32, Normalisierung, `ap_fixed<11,5>`-Rohwörter als `int16`) nach `pc_client/data/`
 - `pc_client/c_reference.cpp` – bitgenaue Referenz für den Hardwaretest: prüft die
   Quantisierung gegen `ap_fixed`, rechnet alle Bilder durch das C-Modell `myproject()`
-- `pc_client/send_image.py` – noch leer
+- `pc_client/send_image.py` – PC-Client (`ping`, `infer`, `batch`, `ddr`), vergleicht die
+  Logits bitgenau mit `ref_logits.bin`
 
 ## Ablauf
 ```
@@ -69,3 +76,13 @@ pc_client/data/c_reference
 `c_reference` schreibt die erwarteten Logits (`ref_logits.bin`, dieselben 32-Bit-Wörter wie
 der Wrapper) und bricht ab, wenn die Quantisierung oder die ersten Bilder nicht bitgleich zu
 `tb_output_predictions.dat` sind.
+
+Bare-Metal-App (unter Windows, nach der Plattform; zwischen zwei `vitis -s`-Läufen auf
+demselben Workspace warten, bis der Vitis-Server beendet ist, sonst „workspace is already
+in use“): `vitis -s vitis/create_app.py <xpfm> [<workspace>] [<baud>]`. Hardwaretest:
+```
+xsct vitis/jtag.tcl boot <lenet5_zybo.bit> <ps7_init.tcl> <lenet5_app.elf>
+python pc_client/send_image.py --port COMx ping|infer <i>|batch [--n N]|ddr [--n N]
+```
+Bitstream und `ps7_init.tcl` liegen im Plattform-Export unter `hw/sdt/`. Ohne Board:
+`vitis/app/host_test/run_host_test.sh` (aus dem Repo-Root, nach den Testdaten).
